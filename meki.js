@@ -68,7 +68,7 @@ function renderStaticHTML() {
   document.querySelector('.loader-sub').textContent = 'GENERATOR EXPERIENCE';
   document.getElementById('skipBtn').innerHTML = `LEWATI ${I.skip}`;
 
-  // Login
+  // Login (Tambah Tombol Kembali)
   document.getElementById('loginCard').innerHTML = `
     ${I.lockBig}
     <h2 style="font-family:'Playfair Display'; font-size:24px; margin-bottom:5px;">Akses Terbatas</h2>
@@ -76,6 +76,7 @@ function renderStaticHTML() {
     <input type="text" id="loginUsn" class="comic-input" placeholder="Username" autocomplete="username">
     <input type="password" id="loginPw" class="comic-input" placeholder="Password" autocomplete="current-password">
     <button class="btn-block" id="btnLogin">MASUK</button>
+    <button class="btn-block" id="btnBackLanding" style="background:transparent; border:1px solid var(--line); margin-top:10px; color:var(--muted);">KEMBALI</button>
     <p id="loginMsg" style="font-size:11px;color:var(--red);margin-top:10px;font-weight:bold;line-height:1.4;"></p>
   `;
 
@@ -248,20 +249,37 @@ function renderStaticHTML() {
 function withTimeout(promise, ms = 15000) {
   return Promise.race([
     promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout: Koneksi ke Firebase terblokir. Pastikan buka pakai link http/https.")), ms))
+    new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout: Koneksi ke Firebase terblokir.")), ms))
   ]);
 }
 
-// ===== INIT =====
+// ===== INIT & LOGIKA LANDING PAGE =====
 renderStaticHTML();
 bindEvents();
 
-// ===== AUTH STATE =====
+// Tombol di Landing Page
+document.getElementById('btnGoToLogin').onclick = () => {
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+};
+
+// Tombol Kembali ke Landing Page
+document.getElementById('btnBackLanding').onclick = () => {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'flex';
+};
+
+// Cek Status Login (Otomatis)
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    // KALO UDAH LOGIN: Sembunyiin Landing & Login, langsung ke Dashboard
+    document.getElementById('landingScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'none';
     handleAuthState(user);
   } else {
-    document.getElementById('loginScreen').style.display = 'flex';
+    // KALO BELUM LOGIN: Tampilkan Landing Page
+    document.getElementById('landingScreen').style.display = 'flex';
+    document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'none';
     document.getElementById('loaderScreen').style.display = 'none';
   }
@@ -276,8 +294,6 @@ async function handleAuthState(user) {
       currentUsername = userDoc.data().username;
       const userExpired = userDoc.data().expired || '2029-12-31';
 
-      document.getElementById('loginScreen').style.display = 'none';
-
       await loadStatsDB();
       await loadFavoritesDB();
 
@@ -291,7 +307,7 @@ async function handleAuthState(user) {
       initLoaderVideo();
     } else {
       await signOut(auth);
-      document.getElementById('loginMsg').textContent = 'Data user tidak ada di database Firestore.';
+      document.getElementById('loginMsg').textContent = 'Data user tidak ada di database.';
     }
   } catch (e) {
     console.error(e);
@@ -317,8 +333,6 @@ function bindEvents() {
       msg.style.color = 'var(--red)';
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
         msg.textContent = 'Username atau Password salah!';
-      } else if (error.message.includes('Timeout')) {
-        msg.textContent = error.message;
       } else {
         msg.textContent = 'Error: ' + error.message;
       }
@@ -823,7 +837,7 @@ window.openDeleteAccountModal = function() {
     <div class="meki-modal-overlay show">
       <div class="meki-modal">
         <div class="meki-modal-title" style="color:var(--red)">Hapus Akun User</div>
-        <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Fitur ini menghapus data user dari database. Akun Auth aslinya mungkin masih ada karena aturan Firebase.</p>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Fitur ini menghapus data user dari database.</p>
         <input type="text" id="delUsn" class="comic-input" placeholder="Username yang mau dihapus">
         <div class="meki-modal-actions">
           <button class="btn-cancel" onclick="document.getElementById('modalRoot').innerHTML=''">Batal</button>
