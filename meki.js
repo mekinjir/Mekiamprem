@@ -17,6 +17,7 @@ const db = getFirestore(app);
 const EMAIL_DOMAIN = "@gmail.com";
 
 let currentUser = null;
+let sessionUser = null; // Nyimpen sesi login sementara
 let currentUserRole = "";
 let currentUsername = "";
 let amCreatedCount = 0;
@@ -63,6 +64,12 @@ const I = {
 
 // ===== RENDER HTML =====
 function renderStaticHTML() {
+  // Isi Icon Sosial Media di Landing Page (SVG)
+  document.getElementById('landingSocials').innerHTML = `
+    <a href="https://t.me/meki_real" target="_blank" title="Telegram">${I.telegram}</a>
+    <a href="https://www.tiktok.com/@meki_real" target="_blank" title="TikTok">${I.tiktok}</a>
+  `;
+
   // Loader
   document.querySelector('.loader-kicker').textContent = 'A LITTLE TOUCH OF PREMIUM';
   document.querySelector('.loader-title').innerHTML = 'MEKI <em>AM Premium</em>';
@@ -258,14 +265,29 @@ function withTimeout(promise, ms = 15000) {
 renderStaticHTML();
 bindEvents();
 
+// Cek Sesi (Tapi JANGAN tampilkan Dashboard dulu, simpan di sessionUser)
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    sessionUser = user;
+  } else {
+    sessionUser = null;
+  }
+});
+
 // Tombol Login di Landing Page
 document.getElementById('btnGoToLogin').onclick = () => {
-  const landingVid = document.getElementById('landingVideo');
-  landingVid.pause(); // MATIIN VIDEO BIAR SUARA GAK DOBEL
-  landingVid.muted = true;
-  
   document.getElementById('landingScreen').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
+  
+  const landingVid = document.getElementById('landingVideo');
+  if (landingVid) { landingVid.pause(); landingVid.muted = true; } // Mute biar suara gak dobel
+
+  if (sessionUser) {
+    // KALO SESI ADA, LANGSUNG MASUK DASHBOARD (Auto Login)
+    handleAuthState(sessionUser);
+  } else {
+    // KALO GAK ADA SESI, MUNCULIN FORM LOGIN
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
 };
 
 // Tombol Kembali ke Landing Page
@@ -274,29 +296,8 @@ document.getElementById('btnBackLanding').onclick = () => {
   document.getElementById('landingScreen').style.display = 'flex';
   
   const landingVid = document.getElementById('landingVideo');
-  landingVid.play(); // NYALAIN LAGI VIDEO LANDING
+  if (landingVid) { landingVid.play(); }
 };
-
-// Cek Status Login (Auto Login)
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // KALO UDAH LOGIN: Sembunyiin Landing & Login, langsung ke Dashboard
-    document.getElementById('landingScreen').style.display = 'none';
-    document.getElementById('loginScreen').style.display = 'none';
-    
-    // Matiin video landing biar gak dobel suara sama loading screen
-    const landingVid = document.getElementById('landingVideo');
-    if(landingVid) { landingVid.pause(); landingVid.muted = true; }
-    
-    handleAuthState(user);
-  } else {
-    // KALO BELUM LOGIN: Tampilkan Landing Page
-    document.getElementById('landingScreen').style.display = 'flex';
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'none';
-    document.getElementById('loaderScreen').style.display = 'none';
-  }
-});
 
 async function handleAuthState(user) {
   currentUser = user;
