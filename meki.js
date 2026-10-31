@@ -17,7 +17,7 @@ const db = getFirestore(app);
 const EMAIL_DOMAIN = "@gmail.com";
 
 let currentUser = null;
-let sessionUser = null; // Nyimpen sesi login sementara
+let sessionUser = null;
 let currentUserRole = "";
 let currentUsername = "";
 let amCreatedCount = 0;
@@ -64,10 +64,10 @@ const I = {
 
 // ===== RENDER HTML =====
 function renderStaticHTML() {
-  // Isi Icon Sosial Media di Landing Page (SVG)
+  // Isi Icon Sosial Media di Landing Page
   document.getElementById('landingSocials').innerHTML = `
-    <a href="https://t.me/meki_real" target="_blank" title="Telegram">${I.telegram}</a>
-    <a href="https://www.tiktok.com/@meki_real" target="_blank" title="TikTok">${I.tiktok}</a>
+    <a href="https://t.me/meki_real" target="_blank">${I.telegram}</a>
+    <a href="https://www.tiktok.com/@meki_real" target="_blank">${I.tiktok}</a>
   `;
 
   // Loader
@@ -76,7 +76,7 @@ function renderStaticHTML() {
   document.querySelector('.loader-sub').textContent = 'GENERATOR EXPERIENCE';
   document.getElementById('skipBtn').innerHTML = `LEWATI ${I.skip}`;
 
-  // Login Form
+  // Login Form (Ada tombol KEMBALI)
   document.getElementById('loginCard').innerHTML = `
     ${I.lockBig}
     <h2 style="font-family:'Playfair Display'; font-size:24px; margin-bottom:5px;">Akses Terbatas</h2>
@@ -265,7 +265,7 @@ function withTimeout(promise, ms = 15000) {
 renderStaticHTML();
 bindEvents();
 
-// Cek Sesi (Tapi JANGAN tampilkan Dashboard dulu, simpan di sessionUser)
+// Cek Sesi Firebase (simpan di sessionUser, JANGAN langsung buka dashboard)
 onAuthStateChanged(auth, (user) => {
   if (user) {
     sessionUser = user;
@@ -279,13 +279,13 @@ document.getElementById('btnGoToLogin').onclick = () => {
   document.getElementById('landingScreen').style.display = 'none';
   
   const landingVid = document.getElementById('landingVideo');
-  if (landingVid) { landingVid.pause(); landingVid.muted = true; } // Mute biar suara gak dobel
+  if (landingVid) { landingVid.pause(); landingVid.muted = true; } // Matiin video biar gak dobel
 
   if (sessionUser) {
-    // KALO SESI ADA, LANGSUNG MASUK DASHBOARD (Auto Login)
+    // KALO UDAH PERNAH LOGIN: Langsung masuk Dashboard
     handleAuthState(sessionUser);
   } else {
-    // KALO GAK ADA SESI, MUNCULIN FORM LOGIN
+    // KALO BELUM: Munculin Form Username & Password
     document.getElementById('loginScreen').style.display = 'flex';
   }
 };
@@ -394,7 +394,7 @@ let loaderFinished = false;
 
 async function initLoaderVideo() {
   loader.style.display = 'flex';
-  loaderVid.muted = false; // Suara loading screen nyala
+  loaderVid.muted = false;
   try { await loaderVid.play(); }
   catch (err) {
     loaderVid.muted = true;
@@ -418,7 +418,7 @@ function finishLoading() {
   loaderFinished = true;
   bar.style.width = '100%';
   loaderVid.pause();
-  loaderVid.muted = true; // Matiin suara loading pas masuk dashboard
+  loaderVid.muted = true;
   if (window._loaderCleanup) window._loaderCleanup();
   setTimeout(() => {
     loader.classList.add('hide');
