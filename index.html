@@ -30,10 +30,8 @@
   
   <div class="landing-footer">
     <p>Contact Us</p>
-    <div class="socials">
-      <a href="https://t.me/usernamekamu" target="_blank">✈️</a>
-      <a href="https://tiktok.com/@mekinjir" target="_blank">🎵</a>
-    </div>
+    <!-- Icon Telegram & TikTok (SVG) diisi otomatis lewat meki.js -->
+    <div class="socials" id="landingSocials"></div>
     <p>© 2026 Meki Engine</p>
   </div>
 </div>
@@ -51,17 +49,21 @@
   </div>
 </div>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen"><div class="login-card" id="loginCard"></div></div>
+<!-- LOGIN SCREEN (Form Username & Password) -->
+<div id="loginScreen">
+  <div class="login-card" id="loginCard"></div>
+</div>
 
-<!-- MAIN APP -->
+<!-- MAIN APP (Dashboard Utama) -->
 <div id="mainApp">
   <header class="top-header" id="topHeader"></header>
+  
   <main id="page-home" class="page active"></main>
   <main id="page-am" class="page" style="padding:15px"></main>
   <main id="page-musik" class="page" style="padding:15px"></main>
   <main id="page-perhatian" class="page" style="padding:15px"></main>
   <main id="page-info" class="page" style="padding:15px"></main>
+  
   <nav class="bottom-nav" id="bottomNav"></nav>
 </div>
 
