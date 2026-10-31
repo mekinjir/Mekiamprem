@@ -1,4 +1,3 @@
-<!-- Encrypt by meki on 2026-10-31 16:47:26 -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -12,8 +11,17 @@
 <link rel="stylesheet" href="meki.css">
 </head>
 <body>
+
+<!-- LOADING SCREEN -->
 <div id="loaderScreen"><video id="bannerVideo" autoplay playsinline muted src="meki.mp4"></video><div class="loader-overlay"></div><button class="skip-btn" id="skipBtn"></button><div class="loader-content"><div class="loader-kicker"></div><div class="loader-title"></div><div class="loader-sub"></div><div class="progress-container"><div class="progress-bar" id="progressBar"></div></div></div></div>
+
+<!-- HALAMAN DEPAN (LANDING) -->
+<div id="landingScreen" class="landing-screen"></div>
+
+<!-- HALAMAN LOGIN -->
 <div id="loginScreen"><div class="login-card" id="loginCard"></div></div>
+
+<!-- APLIKASI UTAMA -->
 <div id="mainApp">
 <header class="top-header" id="topHeader"></header>
 <main id="page-home" class="page active"></main>
@@ -23,6 +31,7 @@
 <main id="page-info" class="page" style="padding:15px"></main>
 <nav class="bottom-nav" id="bottomNav"></nav>
 </div>
+
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="sidebar"></aside>
 <div id="modalRoot"></div>
