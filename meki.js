@@ -47,6 +47,7 @@ const I = {
   alert: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>`,
   close: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`,
   tiktok: `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>`,
+  telegram: `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.41-.89.02-.24.36-.49 1.02-.75 4.01-1.75 6.68-2.9 8.03-3.47 3.83-1.6 4.63-1.87 5.15-1.88.11 0 .37.03.54.17.14.12.18.28.2.45-.02.07.02.27 0 .4z"/></svg>`,
   addUser: `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
   list: `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>`,
   trash: `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`,
@@ -60,7 +61,7 @@ const I = {
   lockBig: `<svg width="30" height="30" fill="var(--pink)" viewBox="0 0 24 24" style="margin-bottom:15px"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>`
 };
 
-// ===== RENDER HTML KE HALAMAN =====
+// ===== RENDER HTML =====
 function renderStaticHTML() {
   // Loader
   document.querySelector('.loader-kicker').textContent = 'A LITTLE TOUCH OF PREMIUM';
@@ -68,7 +69,7 @@ function renderStaticHTML() {
   document.querySelector('.loader-sub').textContent = 'GENERATOR EXPERIENCE';
   document.getElementById('skipBtn').innerHTML = `LEWATI ${I.skip}`;
 
-  // Login (Tambah Tombol Kembali)
+  // Login Form
   document.getElementById('loginCard').innerHTML = `
     ${I.lockBig}
     <h2 style="font-family:'Playfair Display'; font-size:24px; margin-bottom:5px;">Akses Terbatas</h2>
@@ -257,8 +258,12 @@ function withTimeout(promise, ms = 15000) {
 renderStaticHTML();
 bindEvents();
 
-// Tombol di Landing Page
+// Tombol Login di Landing Page
 document.getElementById('btnGoToLogin').onclick = () => {
+  const landingVid = document.getElementById('landingVideo');
+  landingVid.pause(); // MATIIN VIDEO BIAR SUARA GAK DOBEL
+  landingVid.muted = true;
+  
   document.getElementById('landingScreen').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
 };
@@ -267,14 +272,22 @@ document.getElementById('btnGoToLogin').onclick = () => {
 document.getElementById('btnBackLanding').onclick = () => {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('landingScreen').style.display = 'flex';
+  
+  const landingVid = document.getElementById('landingVideo');
+  landingVid.play(); // NYALAIN LAGI VIDEO LANDING
 };
 
-// Cek Status Login (Otomatis)
+// Cek Status Login (Auto Login)
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // KALO UDAH LOGIN: Sembunyiin Landing & Login, langsung ke Dashboard
     document.getElementById('landingScreen').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'none';
+    
+    // Matiin video landing biar gak dobel suara sama loading screen
+    const landingVid = document.getElementById('landingVideo');
+    if(landingVid) { landingVid.pause(); landingVid.muted = true; }
+    
     handleAuthState(user);
   } else {
     // KALO BELUM LOGIN: Tampilkan Landing Page
@@ -367,7 +380,7 @@ function bindEvents() {
   // Home video
   const homeVid = document.getElementById('homeVideo');
   const wrapper = document.getElementById('videoWrapper');
-  wrapper.classList.add('playing');
+  if (wrapper) wrapper.classList.add('playing');
 }
 
 // ===== LOADING SCREEN =====
@@ -380,7 +393,7 @@ let loaderFinished = false;
 
 async function initLoaderVideo() {
   loader.style.display = 'flex';
-  loaderVid.muted = false;
+  loaderVid.muted = false; // Suara loading screen nyala
   try { await loaderVid.play(); }
   catch (err) {
     loaderVid.muted = true;
@@ -404,8 +417,8 @@ function finishLoading() {
   loaderFinished = true;
   bar.style.width = '100%';
   loaderVid.pause();
+  loaderVid.muted = true; // Matiin suara loading pas masuk dashboard
   if (window._loaderCleanup) window._loaderCleanup();
-  loaderVid.muted = true;
   setTimeout(() => {
     loader.classList.add('hide');
     mainApp.style.display = 'block';
